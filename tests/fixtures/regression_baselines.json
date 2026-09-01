@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "note": "Regenerate deliberately only after visual review of the corresponding SVG output.",
+  "cases": {
+    "horizontal_landscape": {
+      "input": "horizontal.ppm",
+      "mode": "landscape",
+      "grid_sha256": "deb8ae1fb296cacc378a3aaaaf247420c5a06b3d64880d9e072cbf7b2ba0ff49",
+      "palette": [
+        {"id": "C01", "name": "Colour 1", "hex": "#D5F2FF"}, {"id": "C02", "name": "Colour 2", "hex": "#F8A224"},
+        {"id": "C03", "name": "Colour 3", "hex": "#384A37"}, {"id": "C04", "name": "Colour 4", "hex": "#203B37"},
+        {"id": "C05", "name": "Colour 5", "hex": "#E3E4DE"}, {"id": "C06", "name": "Colour 6", "hex": "#F8B03E"},
+        {"id": "C07", "name": "Colour 7", "hex": "#052039"}, {"id": "C08", "name": "Colour 8", "hex": "#CC882A"},
+        {"id": "C09", "name": "Colour 9", "hex": "#5E5434"}, {"id": "C10", "name": "Colour 10", "hex": "#8E753B"},
+        {"id": "C11", "name": "Colour 11", "hex": "#F1CA8D"}, {"id": "C12", "name": "Colour 12", "hex": "#EDD7B1"},
+        {"id": "C13", "name": "Colour 13", "hex": "#F4BC68"}, {"id": "C14", "name": "Colour 14", "hex": "#9A6220"}
+      ]
+    },
+    "vertical_portrait": {
+      "input": "vertical.ppm",
+      "mode": "portrait",
+      "grid_sha256": "d2e9478a541a70df0086a4c98268bc530507290b29511c61186fe237beefc457",
+      "palette": [
+        {"id": "C01", "name": "Colour 1", "hex": "#FBFDFC"}, {"id": "C02", "name": "Colour 2", "hex": "#F2ECE5"},
+        {"id": "C03", "name": "Colour 3", "hex": "#FBC18B"}, {"id": "C04", "name": "Colour 4", "hex": "#D7D6D6"},
+        {"id": "C05", "name": "Colour 5", "hex": "#F9D7B8"}, {"id": "C06", "name": "Colour 6", "hex": "#CEB9AC"},
+        {"id": "C07", "name": "Colour 7", "hex": "#090303"}, {"id": "C08", "name": "Colour 8", "hex": "#043898"},
+        {"id": "C09", "name": "Colour 9", "hex": "#6F5A4F"}, {"id": "C10", "name": "Colour 10", "hex": "#ABA09D"},
+        {"id": "C11", "name": "Colour 11", "hex": "#3E2D26"}, {"id": "C12", "name": "Colour 12", "hex": "#355C9A"},
+        {"id": "C13", "name": "Colour 13", "hex": "#5E7FB0"}, {"id": "C14", "name": "Colour 14", "hex": "#847D81"},
+        {"id": "C15", "name": "Colour 15", "hex": "#CD9B7B"}, {"id": "C16", "name": "Colour 16", "hex": "#A2806E"},
+        {"id": "C17", "name": "Colour 17", "hex": "#B1BFD2"}, {"id": "C18", "name": "Colour 18", "hex": "#8AA2C5"}
+      ]
+    },
+    "few_colours_logo": {
+      "input": "few_colours.ppm",
+      "mode": "logo",
+      "grid_sha256": "fedba702152749c2353e26a1629be529435b6615a759b3ad80d1ba697479930d",
+      "palette": [
+        {"id": "C01", "name": "Colour 1", "hex": "#000000"},
+        {"id": "C02", "name": "Colour 2", "hex": "#FFFFFF"},
+        {"id": "C03", "name": "Colour 3", "hex": "#DC1428"}
+      ]
+    },
+    "no_subject_auto": {
+      "input": "no_subject.ppm",
+      "mode": "auto",
+      "grid_sha256": "4cf9816ed1062189ff0c8d427fba5e912cc68fc9af76cf7f08fd255977de3b33",
+      "palette": [
+        {"id": "C01", "name": "Colour 1", "hex": "#F8F8F8"}
+      ]
+    }
+  }
+}
