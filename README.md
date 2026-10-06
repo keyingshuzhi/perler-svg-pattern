@@ -1,20 +1,79 @@
 # perler-svg-pattern
 
-Codex Skill for converting existing image files directly into professional SVG Perler Beads patterns.
+MCP server and compatible CLI for converting existing image files into professional, validated SVG Perler Beads patterns.
+
+作者：柯影数智团队
+
+当前版本：`v0.2.0`（从 v0.1.0 的厚 Skill 工作流升级为 MCP 服务）。
+
+## MCP Server (Recommended)
+
+This project is now an **MCP server**, rather than a heavyweight prompt Skill.
+Clients invoke focused tools while the server owns the conversion workflow and
+returns artifact paths plus a concise JSON result.
+
+Install the project runtime once:
+
+```bash
+uv python install 3.13
+uv sync --group dev
+```
+
+Run the standard stdio server:
+
+```bash
+uv run python mcp_server.py
+```
+
+For a desktop MCP client, register the project with a configuration equivalent
+to the following (replace `/absolute/path/to/perler-svg-pattern`):
+
+```json
+{
+  "mcpServers": {
+    "perler-svg-pattern": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "/absolute/path/to/perler-svg-pattern",
+        "python",
+        "mcp_server.py"
+      ]
+    }
+  }
+}
+```
+
+The public MCP tools are deliberately small:
+
+- `list_brand_palettes`: discover the shipped Perler, Hama, and Artkal colour palettes with source metadata.
+- `get_brand_palette`: inspect purchasable IDs, names, and HEX matching references for one palette.
+- `convert_image`: create the construction SVG, shopping list, JSON report, optional preview, and optional A4 tiles. Inputs remain in place; all artifacts are placed under the caller-selected `output_dir`.
+- `validate_svg_artifact`: independently audit a finished SVG for opaque vector cells and bead-cell counts.
+
+`convert_image` accepts the main production options directly: mode, grid size,
+automatic sizing, maximum colour count, brand or external palette, Lab/RGB
+distance, inventory, background removal, bead shape/size, preview, A4 pages,
+and CSV/JSON shopping-list format. Its returned result is concise; the emitted
+JSON report retains the full grid manifest.
+
+The CLI below remains a supported compatibility interface for batch scripts.
 
 ## Design Principle
 
-This Skill is **stateless**.
+The MCP server is **stateless**.
 
-It does not store user input images and it does not keep generated SVG files inside the Skill installation directory.
+It does not store user input images and it does not keep generated SVG files inside the server installation directory.
 
-Codex passes the existing source image path directly to the Skill and selects the output path in the current workspace.
+The MCP client passes the existing source image path directly to the server and selects the output directory in the current workspace.
 
 ## Structure
 
 ```text
 perler-svg-pattern/
-├── SKILL.md
+├── mcp_server.py
+├── SKILL.md                 # lightweight MCP routing note for legacy discovery
 ├── pyproject.toml
 ├── .gitignore
 ├── README.md
@@ -32,7 +91,7 @@ perler-svg-pattern/
     └── __init__.py
 ```
 
-There is intentionally no `input/` or `output/` directory in the Skill package.
+There is intentionally no `input/` or `output/` directory in the server package.
 
 ## Python Environment
 
@@ -46,25 +105,28 @@ Recommended:
 
 ```bash
 uv python install 3.13
-uv sync
+uv sync --group dev
 ```
 
-## Codex Invocation
+## CLI Compatibility
 
-Codex should call the Skill using the source image's existing path:
+Use the CLI with the source image's existing path when you need a shell/batch workflow:
 
 ```bash
-uv run python <SKILL_DIR>/scripts/image_to_pattern.py   --input "/path/to/current/image.png"   --output "/path/to/current/workspace/pattern.svg"
+uv run python /absolute/path/to/perler-svg-pattern/scripts/image_to_pattern.py \
+  --input "/path/to/current/image.png" \
+  --output "/path/to/current/workspace/pattern.svg"
 ```
 
-If `--output` is omitted, the generated SVG defaults to the **current working directory**, never the Skill directory.
+If `--output` is omitted, the generated SVG defaults to the **current working directory**, never the server directory.
 
 Example:
 
 ```bash
 cd /Users/me/my-project
 
-uv run python ~/.codex/skills/perler-svg-pattern/scripts/image_to_pattern.py   --input ./portrait.png
+uv run python /absolute/path/to/perler-svg-pattern/scripts/image_to_pattern.py \
+  --input ./portrait.png
 ```
 
 Expected destination:
@@ -204,9 +266,9 @@ schema, and unwritable output destinations ask for a writable target path.
 
 ## Artifact Rules
 
-- Never copy user images into the Skill.
-- Never write generated SVG files into the Skill.
-- Never create `<SKILL_DIR>/input`.
-- Never create `<SKILL_DIR>/output`.
+- Never copy user images into the server package.
+- Never write generated SVG files into the server package.
+- Never create `<SERVER_DIR>/input`.
+- Never create `<SERVER_DIR>/output`.
 - Intermediate files should use memory or a system/Codex temporary directory.
 - User artifacts belong to the current Codex workspace or an explicitly requested path.

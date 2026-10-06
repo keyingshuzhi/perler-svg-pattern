@@ -6,6 +6,7 @@ import argparse
 from dataclasses import dataclass
 import os
 from pathlib import Path
+from typing import Callable
 
 import cv2
 import numpy as np
@@ -294,8 +295,16 @@ def _report_path(output_path: Path, explicit_output: str | None) -> Path:
     return Path(explicit_output).expanduser().resolve() if explicit_output else output_path.with_name(f"{output_path.stem}_report.json")
 
 
-def _run() -> None:
-    args = build_parser().parse_args()
+def run_conversion(args: argparse.Namespace, *, emit: Callable[[str], None] | None = print) -> dict:
+    """Run one conversion from parsed arguments and return its JSON manifest.
+
+    ``emit=None`` keeps the conversion silent.  This is used by the MCP server,
+    whose stdio transport reserves stdout for protocol messages.
+    """
+    def report_progress(message: str) -> None:
+        if emit is not None:
+            emit(message)
+
     settings = mode_settings(args.mode)
     if not 1 <= args.max_colors <= 20:
         raise ValueError("--max-colors must be between 1 and 20.")
@@ -354,23 +363,23 @@ def _run() -> None:
     appearance = {"bead_shape": args.bead_shape, "bead_diameter_mm": bead_diameter, "bead_pitch_mm": pitch}
     render_svg(grid=grid, palette=palette, output_path=output_path, cell_size=args.cell_size, metadata={"title": f"{input_path.stem} Perler Pattern", "description": f"Source: {input_path.name}; strategy: {args.mode}"}, **appearance)
     validate_svg(output_path, expected_total=stats["total_beads"], grid=grid, palette=palette, require_legend=True)
-    print(f"Generated construction plan: {output_path}")
+    report_progress(f"Generated construction plan: {output_path}")
     shopping_path = _shopping_path(output_path, args.shopping_list)
     write_shopping_list(build_shopping_list(grid, palette, inventory), shopping_path)
-    print(f"Generated shopping list: {shopping_path}")
+    report_progress(f"Generated shopping list: {shopping_path}")
     artifacts = {"construction_plan": str(output_path), "shopping_list": str(shopping_path)}
     if args.preview:
         preview_path = _preview_path(output_path, args.preview_output)
         render_preview_svg(grid=grid, palette=palette, output_path=preview_path, background=background, **appearance)
         validate_svg(preview_path, expected_total=stats["total_beads"], grid=grid, palette=palette)
-        print(f"Generated pixel preview: {preview_path}")
+        report_progress(f"Generated pixel preview: {preview_path}")
         artifacts["preview"] = str(preview_path)
     if args.a4_pages:
         pages_dir = Path(args.pages_dir).expanduser().resolve() if args.pages_dir else output_path.parent / f"{output_path.stem}_a4_pages"
         pages = render_a4_pages(grid=grid, palette=palette, output_dir=pages_dir, base_name=output_path.stem, orientation=args.page_orientation, **appearance)
         for page in pages:
             validate_svg(page)
-        print(f"Generated {len(pages)} A4 tiles: {pages_dir}")
+        report_progress(f"Generated {len(pages)} A4 tiles: {pages_dir}")
         artifacts["a4_pages"] = [str(page) for page in pages]
     report_path = _report_path(output_path, args.report)
     report = {
@@ -379,9 +388,16 @@ def _run() -> None:
         "pattern": {"grid_size": {"width": stats["width"], "height": stats["height"]}, "physical_size_mm": {"width": grid_width * pitch, "height": grid_height * pitch}, "total_beads": stats["total_beads"], "colour_counts": stats["colour_counts"], "palette": palette, "grid": grid.tolist()},
         "artifacts": artifacts,
     }
+    artifacts["report"] = str(report_path)
+    report["artifacts"] = artifacts
     write_report(report, report_path)
-    print(f"Generated processing report: {report_path}")
-    print(f"Mode: {args.mode} | grid: {stats['width']}x{stats['height']} | {grid_width * pitch:.1f}x{grid_height * pitch:.1f} mm | colours: {len(palette)} | beads: {stats['total_beads']}")
+    report_progress(f"Generated processing report: {report_path}")
+    report_progress(f"Mode: {args.mode} | grid: {stats['width']}x{stats['height']} | {grid_width * pitch:.1f}x{grid_height * pitch:.1f} mm | colours: {len(palette)} | beads: {stats['total_beads']}")
+    return report
+
+
+def _run() -> None:
+    run_conversion(build_parser().parse_args())
 
 
 def main() -> None:
