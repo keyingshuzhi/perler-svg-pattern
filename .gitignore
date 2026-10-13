@@ -14,6 +14,11 @@ dist/
 downloads/
 eggs/
 .eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.eggs/
 lib/
 lib64/
 parts/
@@ -216,3 +221,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# uv / Python virtual environments
+.venv/
+venv/
+env/
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store

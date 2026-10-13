@@ -1,11 +1,23 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
 [project]
 name = "perler-svg-pattern"
-version = "0.2.0"
+version = "0.2.1"
 description = "MCP server and CLI for converting images into validated Perler Beads SVG patterns."
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
 authors = [
     { name = "柯影数智团队" },
+]
+license = { text = "MIT" }
+keywords = ["perler", "beads", "svg", "mcp", "pattern", "model-context-protocol"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Graphics",
 ]
 dependencies = [
     "pillow>=11.0,<13",
@@ -19,11 +31,31 @@ dependencies = [
 color = [
     "scikit-image>=0.25,<1",
 ]
-
-[dependency-groups]
 dev = [
     "pytest>=8.3,<9",
 ]
 
+[project.scripts]
+perler-svg-pattern = "perler_svg_pattern.mcp_server:main"
+perler-image-to-pattern = "perler_svg_pattern.scripts.image_to_pattern:main"
+
+[project.urls]
+Homepage = "https://github.com/keyingshuzhi/perler-svg-pattern"
+Repository = "https://github.com/keyingshuzhi/perler-svg-pattern"
+
+[tool.hatch.build.targets.wheel]
+packages = ["perler_svg_pattern"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "perler_svg_pattern",
+    "assets/palettes",
+    "README.md",
+    "LICENSE",
+    "Dockerfile",
+    "docker-compose.yml",
+    "DEPLOY.md",
+]
+
 [tool.uv]
-package = false
+package = true

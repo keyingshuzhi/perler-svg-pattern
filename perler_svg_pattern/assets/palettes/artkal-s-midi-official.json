@@ -1,0 +1,37 @@
+{
+  "brand": "Artkal",
+  "series": "S / 5 mm Midi",
+  "source": {
+    "url": "https://cdn.shopify.com/s/files/1/1323/8195/files/artkal-beads-S-series-color-chart-_2.webp?v=1757662815",
+    "retrieved": "2026-09-01",
+    "note": "IDs and RGB triplets are transcribed from Artkal's official S-5MM 225-color chart. Artkal's chart identifies these solid colours by code rather than a marketed name."
+  },
+  "colors": [
+    {"id": "S01", "name": "S01", "hex": "#FFFFFF"},
+    {"id": "S77", "name": "S77", "hex": "#EFEFBF"},
+    {"id": "S93", "name": "S93", "hex": "#DAB698"},
+    {"id": "S17", "name": "S17", "hex": "#7B4D35"},
+    {"id": "S51", "name": "S51", "hex": "#FCFBCD"},
+    {"id": "S92", "name": "S92", "hex": "#DEB947"},
+    {"id": "S03", "name": "S03", "hex": "#F6B04C"},
+    {"id": "S04", "name": "S04", "hex": "#FF671F"},
+    {"id": "S05", "name": "S05", "hex": "#E10600"},
+    {"id": "S02", "name": "S02", "hex": "#FFA38B"},
+    {"id": "S06", "name": "S06", "hex": "#EC86D0"},
+    {"id": "S59", "name": "S59", "hex": "#4A1F87"},
+    {"id": "S33", "name": "S33", "hex": "#C5B4E3"},
+    {"id": "S11", "name": "S11", "hex": "#003399"},
+    {"id": "S144", "name": "S144", "hex": "#1A2F6F"},
+    {"id": "S103", "name": "S103", "hex": "#083980"},
+    {"id": "S24", "name": "S24", "hex": "#147BD1"},
+    {"id": "S44", "name": "S44", "hex": "#AADCEB"},
+    {"id": "S10", "name": "S10", "hex": "#41B6E6"},
+    {"id": "S30", "name": "S30", "hex": "#99D6EA"},
+    {"id": "S21", "name": "S21", "hex": "#87D839"},
+    {"id": "S71", "name": "S71", "hex": "#00852B"},
+    {"id": "S55", "name": "S55", "hex": "#ADDC91"},
+    {"id": "S145", "name": "S145", "hex": "#D3C85D"},
+    {"id": "S69", "name": "S69", "hex": "#23282B"},
+    {"id": "S13", "name": "S13", "hex": "#000000"}
+  ]
+}

@@ -2,20 +2,17 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
 import numpy as np
 from PIL import Image, ImageDraw
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-
-from cleanup import cleanup_grid
-from image_to_pattern import choose_grid_size, crop_to_aspect, mode_settings, quantize_to_grid
-from palette import build_shopping_list, load_builtin_palette, nearest_palette_indices, write_shopping_list
-from svg_renderer import render_a4_pages, render_preview_svg, render_svg
-from validate_pattern import validate_pattern, validate_svg
+from perler_svg_pattern.scripts.cleanup import cleanup_grid
+from perler_svg_pattern.scripts.image_to_pattern import choose_grid_size, crop_to_aspect, mode_settings, quantize_to_grid
+from perler_svg_pattern.scripts.palette import build_shopping_list, load_builtin_palette, nearest_palette_indices, write_shopping_list
+from perler_svg_pattern.scripts.svg_renderer import render_a4_pages, render_preview_svg, render_svg
+from perler_svg_pattern.scripts.validate_pattern import validate_pattern, validate_svg
 
 
 def test_cleanup_removes_an_isolated_interior_cell():

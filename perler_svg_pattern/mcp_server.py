@@ -1,8 +1,8 @@
 """MCP entry point for generating verified Perler bead SVG patterns.
 
 The server is intentionally a thin integration layer.  The image-processing
-pipeline remains in ``scripts/`` so the CLI and MCP tools generate identical,
-validated artifacts.
+pipeline remains in ``perler_svg_pattern.scripts`` so the CLI and MCP tools
+generate identical, validated artifacts.
 """
 
 from __future__ import annotations
@@ -14,9 +14,9 @@ from typing import Literal
 
 from mcp.server import MCPServer
 
-from scripts.image_to_pattern import build_parser, run_conversion
-from scripts.palette import PALETTE_DIR, builtin_palette_names, load_builtin_palette
-from scripts.validate_pattern import validate_svg
+from perler_svg_pattern.scripts.image_to_pattern import build_parser, run_conversion
+from perler_svg_pattern.scripts.palette import PALETTE_DIR, builtin_palette_names, load_builtin_palette
+from perler_svg_pattern.scripts.validate_pattern import validate_svg
 
 
 mcp = MCPServer(
@@ -29,7 +29,7 @@ mcp = MCPServer(
         "get_brand_palette before requesting a physical palette, and validate_svg_artifact "
         "to independently audit an SVG created by this server."
     ),
-    version="0.2.0",
+    version="0.2.1",
 )
 
 

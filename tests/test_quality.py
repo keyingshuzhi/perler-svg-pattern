@@ -12,13 +12,11 @@ import numpy as np
 from PIL import Image, ImageDraw
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-
-from cleanup import cleanup_grid
-from image_to_pattern import crop_to_aspect, detect_face_bbox, detect_subject_bbox, edge_protection_mask, load_image, mode_settings, quantize_to_grid
-from palette import compact_palette
-from svg_renderer import render_svg
-from validate_pattern import validate_svg
+from perler_svg_pattern.scripts.cleanup import cleanup_grid
+from perler_svg_pattern.scripts.image_to_pattern import crop_to_aspect, detect_face_bbox, detect_subject_bbox, edge_protection_mask, load_image, mode_settings, quantize_to_grid
+from perler_svg_pattern.scripts.palette import compact_palette
+from perler_svg_pattern.scripts.svg_renderer import render_svg
+from perler_svg_pattern.scripts.validate_pattern import validate_svg
 
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -61,7 +59,7 @@ def test_transparent_png_end_to_end(tmp_path):
     drawing.rectangle((35, 58, 61, 90), fill=(29, 78, 216, 255))
     image.save(source)
     output = tmp_path / "transparent.svg"
-    command = [sys.executable, str(Path(__file__).resolve().parents[1] / "scripts" / "image_to_pattern.py"), "--input", str(source), "--output", str(output), "--width", "24", "--height", "24", "--mode", "portrait", "--preview"]
+    command = [sys.executable, "-m", "perler_svg_pattern.scripts.image_to_pattern", "--input", str(source), "--output", str(output), "--width", "24", "--height", "24", "--mode", "portrait", "--preview"]
     completed = subprocess.run(command, text=True, capture_output=True, check=True)
     assert "Generated construction plan" in completed.stdout
     assert output.is_file() and output.with_name("transparent_preview.svg").is_file()
@@ -77,7 +75,7 @@ def test_cli_art_alias_bead_size_and_json_shopping_list(tmp_path):
     output = tmp_path / "art.svg"
     shopping = tmp_path / "shopping.json"
     report_path = tmp_path / "conversion.json"
-    command = [sys.executable, str(Path(__file__).resolve().parents[1] / "scripts" / "image_to_pattern.py"), "--input", str(FIXTURES / "few_colours.ppm"), "--output", str(output), "--width", "24", "--height", "24", "--mode", "art", "--bead-size-mm", "5", "--shopping-list", str(shopping), "--report", str(report_path)]
+    command = [sys.executable, "-m", "perler_svg_pattern.scripts.image_to_pattern", "--input", str(FIXTURES / "few_colours.ppm"), "--output", str(output), "--width", "24", "--height", "24", "--mode", "art", "--bead-size-mm", "5", "--shopping-list", str(shopping), "--report", str(report_path)]
     subprocess.run(command, text=True, capture_output=True, check=True)
     assert isinstance(json.loads(shopping.read_text(encoding="utf-8")), list)
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -88,12 +86,12 @@ def test_cli_art_alias_bead_size_and_json_shopping_list(tmp_path):
 def test_cli_reports_actionable_small_image_and_bad_palette_errors(tmp_path):
     tiny = tmp_path / "tiny.png"
     Image.new("RGB", (1, 1), "white").save(tiny)
-    command = [sys.executable, str(Path(__file__).resolve().parents[1] / "scripts" / "image_to_pattern.py"), "--input", str(tiny), "--output", str(tmp_path / "tiny.svg")]
+    command = [sys.executable, "-m", "perler_svg_pattern.scripts.image_to_pattern", "--input", str(tiny), "--output", str(tmp_path / "tiny.svg")]
     completed = subprocess.run(command, text=True, capture_output=True)
     assert completed.returncode != 0 and "at least 2x2" in completed.stderr
     bad_palette = tmp_path / "bad.json"
     bad_palette.write_text("{ broken", encoding="utf-8")
-    command = [sys.executable, str(Path(__file__).resolve().parents[1] / "scripts" / "image_to_pattern.py"), "--input", str(FIXTURES / "few_colours.ppm"), "--output", str(tmp_path / "bad.svg"), "--palette", str(bad_palette)]
+    command = [sys.executable, "-m", "perler_svg_pattern.scripts.image_to_pattern", "--input", str(FIXTURES / "few_colours.ppm"), "--output", str(tmp_path / "bad.svg"), "--palette", str(bad_palette)]
     completed = subprocess.run(command, text=True, capture_output=True)
     assert completed.returncode != 0 and "Palette JSON is invalid" in completed.stderr
 

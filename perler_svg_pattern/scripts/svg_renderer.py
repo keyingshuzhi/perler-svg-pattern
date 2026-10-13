@@ -9,10 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
-try:  # Support both ``python scripts/...`` and package imports.
-    from validate_pattern import validate_pattern
-except ImportError:  # pragma: no cover
-    from .validate_pattern import validate_pattern
+from perler_svg_pattern.scripts.validate_pattern import validate_pattern
 
 
 def _appearance(shape: str, diameter_mm: float, pitch_mm: float) -> tuple[str, float, float]:

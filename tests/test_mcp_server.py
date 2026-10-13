@@ -8,7 +8,7 @@ from pathlib import Path
 
 from mcp import Client
 
-from mcp_server import mcp
+from perler_svg_pattern.mcp_server import mcp
 
 
 FIXTURES = Path(__file__).parent / "fixtures"

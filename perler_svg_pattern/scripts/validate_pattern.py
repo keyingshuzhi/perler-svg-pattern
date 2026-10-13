@@ -9,10 +9,7 @@ import xml.etree.ElementTree as ET
 
 import numpy as np
 
-try:  # Support both ``python scripts/...`` and package imports.
-    from palette import hex_to_rgb, rgb_to_hex
-except ImportError:  # pragma: no cover
-    from .palette import hex_to_rgb, rgb_to_hex
+from perler_svg_pattern.scripts.palette import hex_to_rgb, rgb_to_hex
 
 
 SVG_NAMESPACE = "http://www.w3.org/2000/svg"

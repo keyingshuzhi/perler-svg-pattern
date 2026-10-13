@@ -4,7 +4,41 @@ MCP server and compatible CLI for converting existing image files into professio
 
 作者：柯影数智团队
 
-当前版本：`v0.2.0`（从 v0.1.0 的厚 Skill 工作流升级为 MCP 服务）。
+当前版本：`v0.2.1`（从 v0.2.0 的 MCP 服务升级为**可安装的 Python 包**，支持 `uvx` 一键启动与魔塔容器化部署）。
+
+## 安装与启动（三种方式）
+
+### 方式一：uvx 一键启动（零安装，推荐快速体验）
+
+```bash
+# 直接运行内联元数据脚本
+uv run uvx-perler-svg-pattern.py
+
+# 或从 PyPI 拉取（需先发布）
+uvx perler-svg-pattern
+```
+
+### 方式二：pip 安装（适合固定环境）
+
+```bash
+pip install perler-svg-pattern
+
+# 启动 MCP 服务器
+python -m perler_svg_pattern
+perler-svg-pattern
+
+# 或使用 CLI
+perler-image-to-pattern --input portrait.png --output pattern.svg
+```
+
+### 方式三：魔塔容器化部署
+
+```bash
+docker build -t perler-svg-pattern:0.2.1 .
+docker compose up -d
+```
+
+详见 [DEPLOY.md](DEPLOY.md)。
 
 ## MCP Server (Recommended)
 
@@ -12,34 +46,28 @@ This project is now an **MCP server**, rather than a heavyweight prompt Skill.
 Clients invoke focused tools while the server owns the conversion workflow and
 returns artifact paths plus a concise JSON result.
 
-Install the project runtime once:
-
-```bash
-uv python install 3.13
-uv sync --group dev
-```
-
-Run the standard stdio server:
-
-```bash
-uv run python mcp_server.py
-```
-
 For a desktop MCP client, register the project with a configuration equivalent
-to the following (replace `/absolute/path/to/perler-svg-pattern`):
+to the following:
 
 ```json
 {
   "mcpServers": {
     "perler-svg-pattern": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--directory",
-        "/absolute/path/to/perler-svg-pattern",
-        "python",
-        "mcp_server.py"
-      ]
+      "command": "python",
+      "args": ["-m", "perler_svg_pattern"]
+    }
+  }
+}
+```
+
+Or using uvx (no install required):
+
+```json
+{
+  "mcpServers": {
+    "perler-svg-pattern": {
+      "command": "uvx",
+      "args": ["perler-svg-pattern"]
     }
   }
 }
@@ -72,23 +100,30 @@ The MCP client passes the existing source image path directly to the server and 
 
 ```text
 perler-svg-pattern/
-├── mcp_server.py
-├── SKILL.md                 # lightweight MCP routing note for legacy discovery
-├── pyproject.toml
-├── .gitignore
-├── README.md
-├── scripts/
+├── pyproject.toml           # PEP 621 metadata + hatchling build backend + console_scripts
+├── uvx-perler-svg-pattern.py # PEP 723 inline-metadata script for `uvx`
+├── Dockerfile               # 魔塔 (ModelScope) container deployment
+├── docker-compose.yml       # compose definition with persistent output volume
+├── DEPLOY.md                # full deployment guide (uvx / pip / 魔塔)
+├── perler_svg_pattern/      # installable Python package
 │   ├── __init__.py
-│   ├── image_to_pattern.py
-│   ├── palette.py
-│   ├── cleanup.py
-│   ├── svg_renderer.py
-│   └── validate_pattern.py
-├── assets/
-│   └── palettes/
-│       └── README.md
-└── tests/
-    └── __init__.py
+│   ├── __main__.py          # `python -m perler_svg_pattern`
+│   ├── mcp_server.py        # MCP server (stdio transport)
+│   ├── assets/palettes/     # shipped Perler / Hama / Artkal colour palettes
+│   └── scripts/
+│       ├── __init__.py
+│       ├── image_to_pattern.py   # CLI orchestration and conversion pipeline
+│       ├── palette.py             # palette / inventory / shopping-list tools
+│       ├── cleanup.py             # grid cleanup utilities
+│       ├── svg_renderer.py        # SVG / preview / A4 tile renderers
+│       ├── validate_pattern.py    # grid and SVG artifact validation
+│       └── report.py              # JSON conversion report writer
+├── assets/palettes/         # source palettes (mirrored into package)
+├── tests/                   # pytest suite (18 tests, all passing)
+├── SKILL.md                 # lightweight MCP routing note for legacy discovery
+├── README.md
+├── LICENSE
+└── .gitignore
 ```
 
 There is intentionally no `input/` or `output/` directory in the server package.
@@ -101,19 +136,23 @@ Python is restricted to 3.13.x:
 >=3.13,<3.14
 ```
 
-Recommended:
+Recommended for development:
 
 ```bash
 uv python install 3.13
 uv sync --group dev
 ```
 
+> **Note:** `uv.lock` still references `perler-svg-pattern==0.2.0` and should be
+> regenerated with `uv lock` after the v0.2.1 refactor. The lockfile structure
+> remains valid (58 packages, all runtime dependencies present).
+
 ## CLI Compatibility
 
 Use the CLI with the source image's existing path when you need a shell/batch workflow:
 
 ```bash
-uv run python /absolute/path/to/perler-svg-pattern/scripts/image_to_pattern.py \
+perler-image-to-pattern \
   --input "/path/to/current/image.png" \
   --output "/path/to/current/workspace/pattern.svg"
 ```
@@ -125,8 +164,7 @@ Example:
 ```bash
 cd /Users/me/my-project
 
-uv run python /absolute/path/to/perler-svg-pattern/scripts/image_to_pattern.py \
-  --input ./portrait.png
+perler-image-to-pattern --input ./portrait.png
 ```
 
 Expected destination:
@@ -142,7 +180,7 @@ adaptive quantization, isolated-cell cleanup, SVG rendering, and final SVG
 validation in one command.
 
 ```bash
-uv run python scripts/image_to_pattern.py \
+perler-image-to-pattern \
   --input ./portrait.png \
   --output ./portrait-pattern.svg \
   --max-colors 16 \
@@ -160,7 +198,7 @@ printable background, and a legend with each ID, HEX value, and bead count.
 ## Buildability and Print Controls
 
 ```bash
-uv run python scripts/image_to_pattern.py \
+perler-image-to-pattern \
   --input ./portrait.png \
   --output ./portrait-plan.svg \
   --min-component-size 3 \
@@ -184,7 +222,7 @@ uv run python scripts/image_to_pattern.py \
 Use one of the source-documented built-in palettes with `--brand`:
 
 ```bash
-uv run python scripts/image_to_pattern.py \
+perler-image-to-pattern \
   --input ./portrait.png \
   --output ./portrait-hama.svg \
   --brand hama-midi-official \
@@ -212,7 +250,7 @@ Choose an intentional image strategy with `--mode`:
 For example:
 
 ```bash
-uv run python scripts/image_to_pattern.py \
+perler-image-to-pattern \
   --input ./portrait.png \
   --output ./portrait-pattern.svg \
   --mode portrait
@@ -244,7 +282,7 @@ The CLI always emits a construction SVG, a shopping list, and a JSON report. Use
 `--preview` to add a clean preview SVG and `--a4-pages` for print tiles.
 
 ```bash
-uv run python scripts/image_to_pattern.py \
+perler-image-to-pattern \
   --input ./source.png \
   --output ./pattern.svg \
   --mode art \

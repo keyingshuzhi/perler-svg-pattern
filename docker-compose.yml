@@ -1,0 +1,45 @@
+# perler-svg-pattern — MCP server compose definition for魔塔 (ModelScope) deployment.
+#
+# Start with:
+#   docker compose up -d
+#
+# The service exposes the MCP server over stdio.  Mount a writable output
+# directory so generated SVG artifacts land outside the ephemeral container
+# filesystem and persist on the host.
+#
+# Example client configuration (Claude Desktop, Cursor, etc.):
+#   {
+#     "mcpServers": {
+#       "perler-svg-pattern": {
+#         "command": "docker",
+#         "args": ["exec", "-i", "perler-svg-pattern"]
+#       }
+#     }
+#   }
+
+services:
+  perler-svg-pattern:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: perler-svg-pattern:0.2.1
+    container_name: perler-svg-pattern
+    restart: unless-stopped
+    # Stdio MCP transport: keep stdin open, detach stdout/stderr to logs.
+    stdin_open: true
+    tty: false
+    volumes:
+      # Generated artifacts must not live inside the image.
+      - ./output:/app/output:rw
+      # Read-only mount for source images the caller wants to convert.
+      - ./input:/app/input:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    # Health check: verify the package imports and the MCP server boots.
+    healthcheck:
+      test: ["CMD", "python", "-c", "from perler_svg_pattern.mcp_server import mcp; print('ok')"]
+      interval: 30s
+      timeout:10s
+      retries: 3
+      start_period: 10s

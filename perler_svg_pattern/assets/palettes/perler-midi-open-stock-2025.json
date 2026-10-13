@@ -1,0 +1,30 @@
+{
+  "brand": "Perler",
+  "series": "Midi / open stock",
+  "source": {
+    "url": "https://perler.com/content/uploaded_images/Perler_Bead-Color-Reference_2025.pdf",
+    "retrieved": "2026-09-01",
+    "note": "IDs and names are transcribed from Perler's public open-stock reference. The manufacturer does not publish device-independent HEX values; HEX fields are display/matching references and physical swatches remain authoritative. Availability can change."
+  },
+  "colors": [
+    {"id": "80-19001", "name": "White", "hex": "#F7F7F2"},
+    {"id": "80-15181", "name": "Light Gray", "hex": "#B8B9B7"},
+    {"id": "80-19017", "name": "Gray", "hex": "#73777A"},
+    {"id": "80-19092", "name": "Dark Gray", "hex": "#34383B"},
+    {"id": "80-19018", "name": "Black", "hex": "#17191B"},
+    {"id": "80-15250", "name": "Gingerbread", "hex": "#915A37"},
+    {"id": "80-19012", "name": "Brown", "hex": "#653E2C"},
+    {"id": "80-19021", "name": "Light Brown", "hex": "#AA7049"},
+    {"id": "80-15255", "name": "Orange Cream", "hex": "#E89863"},
+    {"id": "80-15205", "name": "Fawn", "hex": "#D5A979"},
+    {"id": "80-19098", "name": "Sand", "hex": "#C9AE84"},
+    {"id": "80-19035", "name": "Tan", "hex": "#B88B65"},
+    {"id": "80-15260", "name": "Stone", "hex": "#9D907D"},
+    {"id": "80-15262", "name": "Cocoa", "hex": "#61463A"},
+    {"id": "80-15208", "name": "Toasted Marshmallow", "hex": "#D8C2A4"},
+    {"id": "80-15251", "name": "Thistle", "hex": "#A795BB"},
+    {"id": "80-19019", "name": "Clear", "hex": "#EDF4F4"},
+    {"id": "80-19085", "name": "Gold Metallic", "hex": "#B58D38"},
+    {"id": "80-15105", "name": "Pearl Silver", "hex": "#A7A8A8"}
+  ]
+}

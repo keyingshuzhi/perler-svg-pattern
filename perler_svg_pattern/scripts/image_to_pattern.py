@@ -13,18 +13,23 @@ import numpy as np
 from PIL import Image, ImageOps
 from sklearn.cluster import KMeans
 
-try:  # Support both ``python scripts/...`` and package imports.
-    from cleanup import cleanup_grid
-    from palette import adaptive_palette, builtin_palette_names, build_shopping_list, compact_palette, hex_to_rgb, load_builtin_palette, load_inventory, load_palette, nearest_palette_indices, rgb_to_hex, write_shopping_list
-    from report import write_report
-    from svg_renderer import render_a4_pages, render_preview_svg, render_svg
-    from validate_pattern import validate_pattern, validate_svg
-except ImportError:  # pragma: no cover
-    from .cleanup import cleanup_grid
-    from .palette import adaptive_palette, builtin_palette_names, build_shopping_list, compact_palette, hex_to_rgb, load_builtin_palette, load_inventory, load_palette, nearest_palette_indices, rgb_to_hex, write_shopping_list
-    from .report import write_report
-    from .svg_renderer import render_a4_pages, render_preview_svg, render_svg
-    from .validate_pattern import validate_pattern, validate_svg
+from perler_svg_pattern.scripts.cleanup import cleanup_grid
+from perler_svg_pattern.scripts.palette import (
+    adaptive_palette,
+    builtin_palette_names,
+    build_shopping_list,
+    compact_palette,
+    hex_to_rgb,
+    load_builtin_palette,
+    load_inventory,
+    load_palette,
+    nearest_palette_indices,
+    rgb_to_hex,
+    write_shopping_list,
+)
+from perler_svg_pattern.scripts.report import write_report
+from perler_svg_pattern.scripts.svg_renderer import render_a4_pages, render_preview_svg, render_svg
+from perler_svg_pattern.scripts.validate_pattern import validate_pattern, validate_svg
 
 
 MIN_GRID_SIZE, MAX_GRID_SIZE = 24, 112
